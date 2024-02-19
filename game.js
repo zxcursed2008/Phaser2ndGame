@@ -13,6 +13,8 @@ var config = {
         }
     },
 
+    
+
     scene: {
         // Функція завантаження ресурсів
         preload: preload,
@@ -23,17 +25,27 @@ var config = {
     }
 };
 
+var platforms;
+
 const game = new Phaser.Game(config);
 
 function preload ()
 {
     this.load.image('fon', 'assets/fon.png');
+    this.load.image('ground', 'assets/platform.png');
 }
 
 function create ()
 {
     // Додавання зображення неба
     this.add.image( 255, 255, 'fon').setScale(12);
+
+
+    platforms = this.physics.add.staticGroup();
+
+    // Створення статичних платформ
+   platforms.create(1400, 700, 'ground');
+   platforms.create(256, 400, 'ground');
 }
 
 function update()
