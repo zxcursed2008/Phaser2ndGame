@@ -1,54 +1,38 @@
-var config = {
-    type: Phaser.AUTO,
-    // Ширина вікна гри
-    width: 1920,
-    // Висота вікна гри
-    height: 1080,
-    physics: {
-        default: 'arcade',
-        arcade: {
-            // Гравітація у напрямку y
-            gravity: { y: 300 },
-            debug: false
-        }
-    },
-
-    
-
-    scene: {
-        // Функція завантаження ресурсів
-        preload: preload,
-        // Функція створення об'єктів гри
-        create: create,
-        // Функція оновлення стану гри
-        update: update
-    }
+window.onload = function() {
+    createBackground(); 
+    createPlatforms(); 
+    createPlayer(); 
 };
-
-var platforms;
-
-const game = new Phaser.Game(config);
-
-function preload ()
-{
-    this.load.image('fon', 'assets/fon.png');
-    this.load.image('ground', 'assets/platform.png');
+  
+function createBackground() {
+    var canvas = document.getElementById("gameCanvas");
+    var context = canvas.getContext("2d");
+  
+    // Create background image
+    var backgroundImage = new Image();
+    backgroundImage.src = "assets/fon.png"; 
+    backgroundImage.onload = function() {
+        // Draw the background image
+        context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+    };
 }
 
-function create ()
-{
-    // Додавання зображення неба
-    this.add.image( 255, 255, 'fon').setScale(12);
-
-
-    platforms = this.physics.add.staticGroup();
-
-    // Створення статичних платформ
-   platforms.create(1400, 700, 'ground');
-   platforms.create(256, 400, 'ground');
+function createPlatforms() {
+    
 }
 
-function update()
-{
+function createPlayer() {
+    var canvas = document.getElementById("gameCanvas");
+    var context = canvas.getContext("2d");
 
+    // Create player image
+    var playerImage = new Image();
+    playerImage.src = "assets/player.png"; 
+    playerImage.onload = function() {
+        // Draw the player image
+        context.drawImage(playerImage, 30, canvas.height - 340, 170, 170); 
+    };
 }
+
+
+
