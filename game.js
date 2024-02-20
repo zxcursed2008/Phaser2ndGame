@@ -6,7 +6,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 300 }, 
+            gravity: { y: 350 }, 
             debug: false 
         }
     },
@@ -26,12 +26,19 @@ var config = {
     this.load.image('ground', 'assets/platform.png'); // Завантаження зображення платформи
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // Завантаження спрайту гравця
     this.load.image('house', 'assets/house.png'); // Завантаження зображення будинка
+    this.load.audio('backgroundMusic', 'assets/music.mp3');
   }
 
   const WORLD_WIDTH = 4000;
   
   /// Створення гри
   function create() {
+    {
+        var music = this.sound.add('backgroundMusic', { loop: true });
+        music.play();
+    }
+  
+
     // Додавання зображення неба та встановлення його розміру
     this.add.image(4200,500, 'sky').setDisplaySize(10000, 1080);
 
@@ -44,7 +51,7 @@ var config = {
     this.add.image(400, 470, 'house');
 
     // Створення гравця
-    player = this.physics.add.sprite(100, 450, 'dude');
+    player = this.physics.add.sprite(610, 600, 'dude');
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
@@ -79,6 +86,10 @@ var config = {
   this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000);
   // Слідкування камери за гравцем
   this.cameras.main.startFollow(player);
+
+  this.add.text(540, 50, 'ЗБЕРИ УСІ ЦЕГЛИНКИ ЩОБ ЗБУДУВАТИ БУДИНОК!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
+
+  this.add.text(2000, 50, 'ОБЕРЕЖНО! НЕБЕЗПЕКА!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
 }
   
   // Оновлення гри
