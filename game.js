@@ -27,6 +27,8 @@ var config = {
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // Завантаження спрайту гравця
     this.load.image('house', 'assets/house.png'); // Завантаження зображення будинка
   }
+
+  const WORLD_WIDTH = 4000;
   
   /// Створення гри
   function create() {
