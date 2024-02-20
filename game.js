@@ -45,7 +45,7 @@ var config = {
     // Створення платформ
     platforms = this.physics.add.staticGroup();
     // Розташовуємо платформу з самого низу екрану
-    platforms.create(700, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(700, 810, 'ground').setDisplaySize(WORLD_WIDTH, 300).refreshBody();
 
     // Додавання зображення будинку на платформу
     this.add.image(400, 470, 'house');
