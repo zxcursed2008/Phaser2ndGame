@@ -1,73 +1,102 @@
-
-
-
-window.onload = function() {
-    createBackground(); 
-    createPlatforms(); 
-    createPlayer(); 
-};
+// Конфігурація гри
+var config = {
+    type: Phaser.AUTO,
+    width: 1920,
+    height: 1080,
+    physics: {
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 }, 
+            debug: false 
+        }
+    },
+    scene: {
+        preload: preload, // Передзавантаження ресурсів
+        create: create, // Створення гри
+        update: update // Оновлення гри
+    }
+  };
   
-function createBackground() {
-    var canvas = document.getElementById("gameCanvas");
-    var context = canvas.getContext("2d");
+  // Ініціалізація гри
+  var game = new Phaser.Game(config);
   
-    // Create background image
-    var backgroundImage = new Image();
-    backgroundImage.src = "assets/fon.png"; 
-    backgroundImage.onload = function() {
-        // Draw the background image
-        context.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
-    };
-}
-
-function createPlatforms() {
-    var canvas = document.getElementById("gameCanvas");
-    var context = canvas.getContext("2d");
+  // Завантаження ресурсів
+  function preload() {
+    this.load.image('sky', 'assets/sky.png'); // Завантаження зображення неба
+    this.load.image('ground', 'assets/platform.png'); // Завантаження зображення платформи
+    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // Завантаження спрайту гравця
+    this.load.image('house', 'assets/house.png'); // Завантаження зображення будинка
+  }
   
-    // Завантаження зображення платформи
-    var platformImage = new Image();
-    platformImage.src = "assets/platform.png"; // Шлях до зображення платформи
-    platformImage.onload = function() {
-        // Малювання платформи вздовж нижнього краю канвасу
-        var platformY = 815; // Y-координата для платформи
-        var platformX = 0; // X-координата для платформи (починається зліва)
+  /// Створення гри
+  function create() {
+    // Додавання зображення неба та встановлення його розміру
+    this.add.image(4200,500, 'sky').setDisplaySize(10000, 1080);
+
+    // Створення платформ
+    platforms = this.physics.add.staticGroup();
+    // Розташовуємо платформу з самого низу екрану
+    platforms.create(700, 810, 'ground').setScale(2).refreshBody();
+
+    // Додавання зображення будинку на платформу
+    this.add.image(400, 470, 'house');
+
+    // Створення гравця
+    player = this.physics.add.sprite(100, 450, 'dude');
+    player.setBounce(0.2);
+    player.setCollideWorldBounds(true);
+
+    // Колізія гравця з платформами
+    this.physics.add.collider(player, platforms);
+    cursors = this.input.keyboard.createCursorKeys();
+
+    // Налаштування анімацій гравця
+    this.anims.create({
+      key: 'left',
+      frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
+      frameRate: 10,
+      repeat: -1
+  });
+
+  this.anims.create({
+      key: 'turn',
+      frames: [{ key: 'dude', frame: 4 }],
+      frameRate: 20
+  });
+
+  this.anims.create({
+      key: 'right',
+      frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+      frameRate: 10,
+      repeat: -1
+  });
+
+  // Встановлення меж камери
+  this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000);
+  // Встановлення меж фізичного світу
+  this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000);
+  // Слідкування камери за гравцем
+  this.cameras.main.startFollow(player);
+}
   
-        // Малювання платформи доки вона не покриє весь канвас
-        while (platformX < canvas.width) {
-            context.drawImage(platformImage, platformX, platformY);
-            platformX += platformImage.width; // Переміщення вправо для наступної платформи
+  // Оновлення гри
+  function update() {
+    if (cursors.left.isDown) {
+        player.setVelocityX(-160); // Рух вліво
+        player.anims.play('left', true);
+    } else if (cursors.right.isDown) {
 
-            var houseImage = new Image();
-        houseImage.src = "assets/broken-house.png"; // Шлях до зображення будинку
-        houseImage.onload = function() {
-            // Розміщення будинку на першій платформі
-            var houseX = 1200; // X-координата для будинку
-            var houseY = 375; // Y-координата для будинку (розміщення зверху платформи)
-            context.drawImage(houseImage, houseX, houseY);
-        };
-    };
-}
-}
+        player.setVelocityX(160); // Рух вправо
+        player.anims.play('right', true);
+    } else 
+    {
+        player.setVelocityX(0); // Зупинка гравця
+        player.anims.play('turn');
+    }
+  
+    if (cursors.up.isDown && player.body.touching.down) {
 
-
-
-function createPlayer() {
-    var canvas = document.getElementById("gameCanvas");
-    var context = canvas.getContext("2d");
-
-    // Create player image
-    var playerImage = new Image();
-    playerImage.src = "assets/player.png"; 
-    playerImage.onload = function() {
-        // Draw the player image
-        context.drawImage(playerImage, 30, canvas.height - 410, 170, 170); 
-    };
-}
-
-
-
-
-
-
-
-
+        player.setVelocityY(-330); // Пристріл вгору, тільки коли гравець на платформі
+    }
+  }
+  
