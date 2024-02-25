@@ -6,7 +6,7 @@ var config = {
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 350 }, 
+            gravity: { y: 220 }, 
             debug: false 
         }
     },
@@ -27,6 +27,7 @@ var config = {
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // Завантаження спрайту гравця
     this.load.image('house', 'assets/house.png'); // Завантаження зображення будинка
     this.load.audio('backgroundMusic', 'assets/music.mp3');
+    this.load.image('ground1', 'assets/ground1.png');
   }
 
   const WORLD_WIDTH = 4000;
@@ -42,10 +43,23 @@ var config = {
     // Додавання зображення неба та встановлення його розміру
     this.add.image(4200,500, 'sky').setDisplaySize(10000, 1080);
 
-    // Створення платформ
     platforms = this.physics.add.staticGroup();
-    // Розташовуємо платформу з самого низу екрану
-    platforms.create(700, 810, 'ground').setDisplaySize(WORLD_WIDTH, 300).refreshBody();
+  
+    // Розташовуємо першу платформу з самого низу екрану
+    platforms.create(700, 810, 'ground').setScale(2).refreshBody();
+  
+    // Розташовуємо другу платформу далі вправо, за межами екрану
+    platforms.create(2200, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(3700, 810, 'ground').setScale(2).refreshBody(); 
+    platforms.create(5200, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(6500, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(7000, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(8500, 810, 'ground').setScale(2).refreshBody();
+
+    platforms.create(1500, 500, 'ground1').setScale(2).refreshBody();
+    platforms.create(2000, 350, 'ground1').setScale(2).refreshBody();
+    platforms.create(2600, 550, 'ground1').setScale(2).refreshBody();
+    
 
     // Додавання зображення будинку на платформу
     this.add.image(400, 470, 'house');
@@ -79,6 +93,7 @@ var config = {
       frameRate: 10,
       repeat: -1
   });
+  
 
   // Встановлення меж камери
   this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000);
@@ -87,13 +102,14 @@ var config = {
   // Слідкування камери за гравцем
   this.cameras.main.startFollow(player);
 
-  this.add.text(540, 50, 'ЗБЕРИ УСІ ЦЕГЛИНКИ ЩОБ ЗБУДУВАТИ БУДИНОК!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
 
+  this.add.text(540, 50, 'ЗБЕРИ УСІ ЦЕГЛИНКИ ЩОБ ЗБУДУВАТИ БУДИНОК!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
   this.add.text(2000, 50, 'ОБЕРЕЖНО! НЕБЕЗПЕКА!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
 }
   
   // Оновлення гри
   function update() {
+    
     if (cursors.left.isDown) {
         player.setVelocityX(-160); // Рух вліво
         player.anims.play('left', true);
