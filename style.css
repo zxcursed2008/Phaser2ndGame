@@ -7,3 +7,28 @@ body {
     height: 100vh;
     overflow: hidden;
   }
+
+  #game {
+     
+    position: absolute;
+
+
+  }
+
+  #score {
+
+position: fixed;
+top:10px;
+left:50px;
+
+
+  }
+
+  #timer {
+
+position: fixed;
+top: 10px;
+left: 1630px;
+
+
+  }

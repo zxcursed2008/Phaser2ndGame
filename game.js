@@ -3,6 +3,7 @@ var config = {
     type: Phaser.AUTO,
     width: 1920,
     height: 1080,
+    parent: game,
     physics: {
         default: 'arcade',
         arcade: {
@@ -16,6 +17,11 @@ var config = {
         update: update // Оновлення гри
     }
   };
+
+     var score = 0; // Початковий рахунок гравця
+    var scoreText; // Текст рахунку
+    var canMove = true;
+    var time = 0;
   
   // Ініціалізація гри
   var game = new Phaser.Game(config);
@@ -28,6 +34,7 @@ var config = {
     this.load.image('house', 'assets/house.png'); // Завантаження зображення будинка
     this.load.audio('backgroundMusic', 'assets/music.mp3');
     this.load.image('ground1', 'assets/ground1.png');
+    this.load.image('star', 'assets/star.png'); // Завантаження зображення платформи
   }
 
   const WORLD_WIDTH = 4000;
@@ -41,31 +48,40 @@ var config = {
   
 
     // Додавання зображення неба та встановлення його розміру
-    this.add.image(4200,500, 'sky').setDisplaySize(10000, 1080);
+    this.add.image(4200,540, 'sky').setDisplaySize(10000, 1080);
 
     platforms = this.physics.add.staticGroup();
   
     // Розташовуємо першу платформу з самого низу екрану
-    platforms.create(700, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(700, 950, 'ground').setScale(2).refreshBody();
   
     // Розташовуємо другу платформу далі вправо, за межами екрану
-    platforms.create(2200, 810, 'ground').setScale(2).refreshBody();
-    platforms.create(3700, 810, 'ground').setScale(2).refreshBody(); 
-    platforms.create(5200, 810, 'ground').setScale(2).refreshBody();
-    platforms.create(6500, 810, 'ground').setScale(2).refreshBody();
-    platforms.create(7000, 810, 'ground').setScale(2).refreshBody();
-    platforms.create(8500, 810, 'ground').setScale(2).refreshBody();
+    platforms.create(2200, 950, 'ground').setScale(2).refreshBody();
+    platforms.create(3700, 950, 'ground').setScale(2).refreshBody(); 
+    platforms.create(5200, 950, 'ground').setScale(2).refreshBody();
+    platforms.create(6500, 950, 'ground').setScale(2).refreshBody();
+    platforms.create(7000, 950, 'ground').setScale(2).refreshBody();
+    platforms.create(8500, 950, 'ground').setScale(2).refreshBody();
 
-    platforms.create(1500, 500, 'ground1').setScale(2).refreshBody();
-    platforms.create(2000, 350, 'ground1').setScale(2).refreshBody();
-    platforms.create(2600, 550, 'ground1').setScale(2).refreshBody();
+    platforms.create(1500, 600, 'ground1').setScale(2).refreshBody();
+    platforms.create(2000, 450, 'ground1').setScale(2).refreshBody();
+    platforms.create(2500, 650, 'ground1').setScale(2).refreshBody();
+    platforms.create(3000, 600, 'ground1').setScale(2).refreshBody();
+    platforms.create(3500, 450, 'ground1').setScale(2).refreshBody();
+    platforms.create(4000, 650, 'ground1').setScale(2).refreshBody();
+    platforms.create(4500, 600, 'ground1').setScale(2).refreshBody();
+    platforms.create(5000, 450, 'ground1').setScale(2).refreshBody();
+    platforms.create(5500, 650, 'ground1').setScale(2).refreshBody();
+    platforms.create(6000, 600, 'ground1').setScale(2).refreshBody();
+    platforms.create(6500, 450, 'ground1').setScale(2).refreshBody();
+    platforms.create(7000, 650, 'ground1').setScale(2).refreshBody();
     
 
     // Додавання зображення будинку на платформу
-    this.add.image(400, 470, 'house');
+    this.add.image(400, 610, 'house');
 
     // Створення гравця
-    player = this.physics.add.sprite(610, 600, 'dude');
+    player = this.physics.add.sprite(610, 600, 'dude').setScale(2);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
@@ -103,9 +119,39 @@ var config = {
   this.cameras.main.startFollow(player);
 
 
+  const stars = this.physics.add.group({
+    key: 'star',
+    repeat: 1000, // Кількість зірок (змініть за потребою)
+    setXY: { x: 250, y: 50, stepX: 70 } // Відстань між зірками (змініть за потребою)
+});
+
+ // Налаштування властивостей зірок
+ stars.children.iterate(function (child) {
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+});
+
+// Колізія зірок з платформами
+this.physics.add.collider(stars, platforms);
+this.physics.add.overlap(player, stars, collectStar, null, this);
+scoreText = this.add.text(200000, 100006, 'Score: 0', { fontSize: '32px', fill: '#000' });
+
+
+
+
+
   this.add.text(540, 50, 'ЗБЕРИ УСІ ЦЕГЛИНКИ ЩОБ ЗБУДУВАТИ БУДИНОК!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
   this.add.text(2000, 50, 'ОБЕРЕЖНО! НЕБЕЗПЕКА!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
 }
+
+
+function collectStar(player, star) {
+    star.disableBody(true, true);
+    score += 1;
+    scoreText.setText('Score: ' + score);
+    document.getElementById('score').innerHTML='<h1>Score:' + score + "</h1>";
+
+   
+    }
   
   // Оновлення гри
   function update() {
@@ -128,4 +174,14 @@ var config = {
         player.setVelocityY(-330); // Пристріл вгору, тільки коли гравець на платформі
     }
   }
+
+  // Оновлення часу гри
+function updateTime() {
+    time++;
+    document.getElementById("time").innerHTML = "Time: " + formatTime(time);
+}
+
+
+
+context.fillText("Час гри: " + formatTime(time), board.width / 2, board.height / 2 + 60);
   
