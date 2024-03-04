@@ -44,6 +44,7 @@ var config = {
     this.load.image('sky1', 'assets/sky1.png');
     this.load.image('bush', 'assets/bush.png'); // Завантаження зображення куща
     this.load.image('mushroom', 'assets/mushroom.png'); // Завантаження зображення гриба
+    this.load.image('tree', 'assets/tree.png')
   }
 
   const WORLD_WIDTH = 4000;
@@ -115,7 +116,7 @@ var config = {
     // platforms.create(22500, 450, 'ground1').setScale(2).refreshBody();
     // platforms.create(23000, 650, 'ground1').setScale(2).refreshBody();
 
-
+//1
     
 
     // Додавання зображення будинку на платформу
@@ -167,6 +168,13 @@ var config = {
 for(var x = 900; x<worldWidth; x=x+Phaser.Math.FloatBetween(400, 1500)){
     console.log(' x-'+ x)
     bushes.create(x,1080-150,'bush').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
+}
+
+trees = this.physics.add.staticGroup();
+//Додаємо кущів на всю ширину екрану
+for(var x = 900; x<worldWidth; x=x+Phaser.Math.FloatBetween(400, 2500)){
+    console.log(' x-'+ x)
+    trees.create(x,1080-150,'tree').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
 }
 
 
