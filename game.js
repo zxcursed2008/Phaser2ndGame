@@ -2,7 +2,7 @@
 var config = {
     type: Phaser.AUTO,
     width: 1920,
-    height: 1080,
+    height: 1000,
     parent: game,
     physics: {
         default: 'arcade',
@@ -258,8 +258,6 @@ function updateTime() {
 
 
 
-
-
 timerText = this.add.text(16, 50, 'Час: 00:00.0', { fontSize: '32px', fill: '#000' }); // додати початковий текст до таймера
 
 const timerFunction = setInterval(function() {
@@ -269,4 +267,4 @@ const timerFunction = setInterval(function() {
   }, 95); // повторювати кожні 95 мс (-5 мс для владнання похибки)
 
 fetchLeaderboard();
-  
+context.fillText("Час гри: " + formatTime(time), board.width / 2, board.height / 2 + 60);
