@@ -1,14 +1,15 @@
 // Конфігурація гри
+
 //21111111111111111111111111111111111111111111111111111111111111111111
 var config = {
     type: Phaser.AUTO,
     width: 1920,
-    height: 1000,
-    parent: game,
+    height: 1080,
     physics: {
         default: 'arcade',
         arcade: {
-            gravity: { y: 240 }, 
+            gravity: { y: 300 }, 
+
             debug: false 
         }
     },
@@ -16,6 +17,7 @@ var config = {
         preload: preload, // Передзавантаження ресурсів
         create: create, // Створення гри
         update: update // Оновлення гри
+
     }
   };
 
@@ -40,6 +42,8 @@ var config = {
     this.load.image('ground1', 'assets/ground1.png');
     this.load.image('star', 'assets/star.png'); // Завантаження зображення платформи
     this.load.image('sky1', 'assets/sky1.png');
+    this.load.image('bush', 'assets/bush.png'); // Завантаження зображення куща
+    this.load.image('mushroom', 'assets/mushroom.png'); // Завантаження зображення гриба
   }
 
   const WORLD_WIDTH = 4000;
@@ -53,111 +57,72 @@ var config = {
   
 
     // Додавання зображення неба та встановлення його розміру
-    this.add.image(500,500, 'sky');
-    platforms = this.physics.add.staticGroup();
-
-    // for(var x = 0; x < worldWidth; x = x + 1000) {
-
-    //     console.log(x)
-    //     platforms.create(x, 1000, 'ground').setScale(2).setOrigin(0, 0).refreshBody();
-        
-
-
-    // }
-
-     // Додавання зображення неба(його продовження)
-     this.add.image(1500,500, 'sky1');
-     this.add.image(2500,500, 'sky1');
-     this.add.image(3500,500, 'sky1');
-     this.add.image(4500,500, 'sky1');
-     this.add.image(5500,500, 'sky1');
-     this.add.image(6500,500, 'sky1');
-     this.add.image(7500,500, 'sky1');
-     this.add.image(8500,500, 'sky1');
-     this.add.image(9500,500, 'sky1');
-     this.add.image(10500,500, 'sky1');
-     this.add.image(11500,500, 'sky1');
-     this.add.image(12500,500, 'sky1');
-     this.add.image(13500,500, 'sky1');
-     this.add.image(14500,500, 'sky1');
-     this.add.image(15500,500, 'sky1');
-     this.add.image(16500,500, 'sky1');
+    this.add.tileSprite(0,0,worldWidth,1080,'sky1').setOrigin(0,0);
+    
 
     platforms = this.physics.add.staticGroup();
+
+
+    platforms = this.physics.add.staticGroup();
+    //Додаємо землю на всю ширинуекрану
+    for(var x = 0; x<worldWidth; x=x+800){
+        console.log(x)
+        platforms.create(x,1080-150,'ground').setOrigin(0,0).refreshBody();
+    }
   
-    // Розташовуємо першу платформу з самого низу екрану
-    platforms.create(700, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(2200, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(3700, 950, 'ground').setScale(2).refreshBody(); 
-    platforms.create(5200, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(6500, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(7000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(8500, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(9000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(10500, 950, 'ground').setScale(2).refreshBody(); 
-    platforms.create(11000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(12500, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(14000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(15500, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(16000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(17500, 950, 'ground').setScale(2).refreshBody(); 
-    platforms.create(19000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(20500, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(22000, 950, 'ground').setScale(2).refreshBody();
-    platforms.create(23500, 950, 'ground').setScale(2).refreshBody();
 
 // Розташовуємо другу платформу далі вправо, за межами екрану
-    platforms.create(1500, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(2000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(2500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(3000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(3500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(4000, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(4500, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(5000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(5500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(6000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(6500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(7500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(8000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(8500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(9000, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(9500, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(10000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(10500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(11000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(11500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(12000, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(12500, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(13000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(13500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(14000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(14500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(15000, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(15500, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(16000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(16500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(17000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(17500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(18000, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(18500, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(19000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(19500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(20000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(21000, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(21500, 650, 'ground1').setScale(2).refreshBody();
-    platforms.create(22000, 600, 'ground1').setScale(2).refreshBody();
-    platforms.create(22500, 450, 'ground1').setScale(2).refreshBody();
-    platforms.create(23000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(1500, 800, 'ground1').setScale(2).refreshBody();
+    // platforms.create(2000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(2500, 850, 'ground1').setScale(2).refreshBody();
+    // platforms.create(3000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(3500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(4000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(4500, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(5000, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(5500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(6000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(6500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(7500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(8000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(8500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(9000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(9500, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(10000, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(10500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(11000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(11500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(12000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(12500, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(13000, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(13500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(14000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(14500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(15000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(15500, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(16000, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(16500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(17000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(17500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(18000, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(18500, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(19000, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(19500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(20000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(21000, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(21500, 650, 'ground1').setScale(2).refreshBody();
+    // platforms.create(22000, 600, 'ground1').setScale(2).refreshBody();
+    // platforms.create(22500, 450, 'ground1').setScale(2).refreshBody();
+    // platforms.create(23000, 650, 'ground1').setScale(2).refreshBody();
 
 
     
 
     // Додавання зображення будинку на платформу
-    this.add.image(400, 610, 'house');
+    this.add.image(400, 740, 'house');
 
     // Створення гравця
-    player = this.physics.add.sprite(610, 600, 'dude').setScale(2);
+    player = this.physics.add.sprite(610, 880, 'dude').setScale(2);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
@@ -193,6 +158,24 @@ var config = {
   this.physics.world.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000);
   // Слідкування камери за гравцем
   this.cameras.main.startFollow(player);
+
+
+
+
+  bushes = this.physics.add.staticGroup();
+//Додаємо кущів на всю ширину екрану
+for(var x = 900; x<worldWidth; x=x+Phaser.Math.FloatBetween(400, 1500)){
+    console.log(' x-'+ x)
+    bushes.create(x,1080-150,'bush').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
+}
+
+
+mushrooms = this.physics.add.staticGroup();
+//Додаємо грибів на всю ширину екрану
+for(var x = 500; x<worldWidth; x=x+Phaser.Math.FloatBetween(400, 1500)){
+    console.log(' x-'+ x)
+    mushrooms.create(x, 1080-150,'mushroom').setOrigin(0,1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
+}
 
 
   const stars = this.physics.add.group({
@@ -258,14 +241,4 @@ function updateTime() {
 }
 
 
-
-timerText = this.add.text(16, 50, 'Час: 00:00.0', { fontSize: '32px', fill: '#000' }); // додати початковий текст до таймера
-
-const timerFunction = setInterval(function() {
-    if (!timerOn) {return;} // якщо таймер вимкнено, нічого не робити
-    timer+=1;
-    timerText.setText("Час: " + formatTimerText(timer));
-  }, 95); // повторювати кожні 95 мс (-5 мс для владнання похибки)
-
-fetchLeaderboard();
-context.fillText("Час гри: " + formatTime(time), board.width / 2, board.height / 2 + 60);
+  
