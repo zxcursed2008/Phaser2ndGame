@@ -61,7 +61,7 @@ function create() {
   
 
   // Додавання зображення неба та встановлення його розміру
-  this.add.tileSprite(0, 0, worldWidth, 1080, 'sky1').setOrigin(0, 0);
+  this.add.tileSprite(0, 0, worldWidth, 1080, 'sky1').setDepth(0).setOrigin(0, 0);
 
 
   platforms = this.physics.add.staticGroup();
@@ -123,7 +123,7 @@ function create() {
 
 
   // Додавання зображення будинку на платформу
-  this.add.image(400, 740, 'house');
+  this.add.image(400, 740, 'house').setDepth(1);
 
   // Створення гравця
   player = this.physics.add.sprite(610, 880, 'dude').setScale(2);
@@ -191,7 +191,7 @@ function create() {
 
   const stars = this.physics.add.group({
     key: 'star',
-    repeat: 1000, // Кількість зірок (змініть за потребою)
+    repeat: 99, // Кількість зірок (змініть за потребою)
     setXY: { x: 250, y: 50, stepX: 70 } // Відстань між зірками (змініть за потребою)
   });
 
