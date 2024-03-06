@@ -47,6 +47,8 @@ function preload() {
   this.load.image('bush', 'assets/bush.png'); // Завантаження зображення куща
   this.load.image('mushroom', 'assets/mushroom.png'); // Завантаження зображення гриба
   this.load.image('tree', 'assets/tree.png')// Завантаження зображення дерева
+  // this.load.spritesheet('dudeleft', 'assets/dudeleft.png')
+  // this.load.spritesheet('dude1', 'assets/dude1.png')
 }
 
 const WORLD_WIDTH = 4000;
@@ -123,12 +125,16 @@ function create() {
 
 
   // Додавання зображення будинку на платформу
-  this.add.image(400, 740, 'house').setDepth(1);
+  this.add.image(400, 740, 'house').setDepth(0);
 
   // Створення гравця
-  player = this.physics.add.sprite(610, 880, 'dude').setScale(2);
+  player = this.physics.add.sprite(610, 880, 'dude').setDepth(5).setScale(2);
   player.setBounce(0.2);
   player.setCollideWorldBounds(true);
+
+  // player = this.physics.add.sprite(960, 1, 'dude1').setScale(2);
+  //   player.setBounce(0.2);
+  //   player.setCollideWorldBounds(true);
 
   // Колізія гравця з платформами
   this.physics.add.collider(player, platforms);
@@ -155,6 +161,31 @@ function create() {
     repeat: -1
   });
 
+  
+
+
+
+
+//   this.anims.create({
+//     key: 'a',
+//     frames: this.anims.generateFrameNumbers('dudeleft', { start: 0, end: 3 }),
+//     frameRate: 10,
+//     repeat: -1
+// });
+
+// this.anims.create({
+//     key: 'w',
+//     frames: [{ key: 'dude1', frame: 4 }],
+//     frameRate: 20
+// });
+
+// this.anims.create({
+//     key: 'd',
+//     frames: this.anims.generateFrameNumbers('dude1', { start: 5, end: 8 }),
+//     frameRate: 10,
+//     repeat: -1
+// });
+
 
   // Встановлення меж камери
   this.cameras.main.setBounds(0, 0, Number.MAX_SAFE_INTEGER, 1000);
@@ -170,14 +201,14 @@ function create() {
   //Додаємо кущів на всю ширину екрану
   for (var x = 900; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 1500)) {
     console.log(' x-' + x)
-    bushes.create(x, 1080 - 150, 'bush').setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
+    bushes.create(x, 1080 - 150, 'bush').setDepth(Phaser.Math.Between(1, 10)).setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
   }
 
   trees = this.physics.add.staticGroup();
   //Додаємо дерев на всю ширину екрану
   for (var x = 900; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 2500)) {
     console.log(' x-' + x)
-    trees.create(x, 1080 - 150, 'tree').setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
+    trees.create(x, 1080 - 150, 'tree').setDepth(Phaser.Math.Between(1, 10)).setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
   }
 
 
@@ -185,20 +216,20 @@ function create() {
   //Додаємо грибів на всю ширину екрану
   for (var x = 500; x < worldWidth; x = x + Phaser.Math.FloatBetween(400, 1500)) {
     console.log(' x-' + x)
-    mushrooms.create(x, 1080 - 150, 'mushroom').setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
+    mushrooms.create(x, 1080 - 150, 'mushroom').setDepth(Phaser.Math.Between(1, 10)).setOrigin(0, 1).setScale(Phaser.Math.FloatBetween(0.5, 1.5)).refreshBody();
   }
 
 
   const stars = this.physics.add.group({
     key: 'star',
-    repeat: 99, // Кількість зірок (змініть за потребою)
+    repeat: 98, // Кількість зірок (змініть за потребою)
     setXY: { x: 250, y: 50, stepX: 70 } // Відстань між зірками (змініть за потребою)
   });
 
 
   // Налаштування властивостей зірок
   stars.children.iterate(function (child) {
-    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
+    child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.5));
   });
 
   // Колізія зірок з платформами
@@ -245,6 +276,29 @@ function update() {
 
     player.setVelocityY(-330); // Пристріл вгору, тільки коли гравець на платформі
   }
+
+
+
+  // if (cursors.left.isDown)
+  //   {
+  //       player.setVelocityX(-160);
+  //       player.anims.play('a', true);
+  //   }
+  //   else if (cursors.right.isDown)
+  //   {
+  //       player.setVelocityX(160);
+  //       player.anims.play('d', true);
+  //   }
+  //   else
+  //   {
+  //       player.setVelocityX(0);
+  //       player.anims.play('w');
+  //   }
+
+  //   if (cursors.up.isDown && player.body.touching.down)
+  //   {
+  //       player.setVelocityY(-330);
+  //   }
 }
 
 // Оновлення часу гри
