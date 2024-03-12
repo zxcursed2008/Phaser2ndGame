@@ -35,6 +35,7 @@ var config = {
     this.load.audio('backgroundMusic', 'assets/music.mp3');
     this.load.image('ground1', 'assets/ground1.png');
     this.load.image('star', 'assets/star.png'); // Завантаження зображення платформи
+    this.load.image('sky1', 'assets/sky1.png'); // Завантаження зображення неба
   }
 
   const WORLD_WIDTH = 4000;
@@ -48,7 +49,7 @@ var config = {
   
 
     // Додавання зображення неба та встановлення його розміру
-    this.add.image(4200,540, 'sky').setDisplaySize(10000, 1080);
+    this.add.image(500,540, 'sky').setDisplaySize(10000, 1080);
 
     platforms = this.physics.add.staticGroup();
   
@@ -81,7 +82,7 @@ var config = {
     this.add.image(400, 610, 'house');
 
     // Створення гравця
-    player = this.physics.add.sprite(610, 600, 'dude').setScale(2);
+    player = this.physics.add.sprite(610, 600, 'dude').setScale(1.6);
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
