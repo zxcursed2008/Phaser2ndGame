@@ -28,7 +28,17 @@ left:50px;
 
 position: fixed;
 top: 10px;
-left: 1630px;
+left: 1030px;
+
+
+  }
+
+  #Live {
+
+    position: fixed;
+    top: 10px;
+    left: 1630px;
+
 
 
   }
