@@ -27,9 +27,8 @@ var timer = 0; // *100 мс
 var timerText; // текстова змінна для таймера
 var worldWidth = 20000;
 var powers; //зміна життів
-var live = 5 //початкова кількіть життів
-var lifeLine
-var bombs
+var life = 3; //початкова кількіть життів
+
 
 
 
@@ -55,6 +54,7 @@ function preload() {
   this.load.image('platformStart', 'assets/platformStart.png'); //Завантаження першої платформи
   this.load.image('platformOne', 'assets/platformOne.png'); //Завантаження другої платформи
   this.load.image('platformFinish', 'assets/platformFinish.png'); //Завантаження третьої платформи
+  this.load.image('bomb', 'assets/bomb.png'); // Завантаження зображення бомби
 
 }
 
@@ -122,8 +122,8 @@ function create() {
 
 
 
- 
-//Додано статичні
+
+  //Додано статичні
   for (var x = 0; x < worldWidth; x = x + Phaser.Math.Between(600, 800)) {
     var y = Phaser.Math.FloatBetween(600, 93 * 8)
     platforms.create(x, y, 'platformStart');
@@ -192,12 +192,12 @@ function create() {
 
     if (canMove) {
       // Збільшення "Live" при збиранні елементів
-      live += 1;
-      liveText.setText('Live: ' + live); // Оновлення тексту "Live"
+      life += 1;
+      liveText.setText(showLife()); // Оновлення тексту "Live"
     }
   }
   // Створення тексту "Live"
-  liveText = this.add.text(window.innerWidth - 16, 16, 'Live: 0', { fontSize: '32px', fill: '#000' }).setOrigin(1, 0).setScrollFactor(0);
+  liveText = this.add.text(window.innerWidth - 16, 16, 'Live: 3', { fontSize: '32px', fill: '#000' }).setOrigin(1, 0).setScrollFactor(0);
 
 
 
@@ -212,6 +212,7 @@ function create() {
   // Налаштування властивостей зірок
   stars.children.iterate(function (child) {
     child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.5));
+    child.setGravityY(300); // Додаємо гравітацію для падіння зірок
   });
 
   // Колізія зірок з платформами
@@ -231,6 +232,7 @@ function collectStar(player, star) {
   score += 1;
   scoreText.setText('Score:  ' + score);
   document.getElementById('score').innerHTML = '<h1>Score: ' + score + "/100</h1>";
+  createBomb.call(this, star); // Виклик функції для створення бомби
 
 
 }
@@ -262,19 +264,81 @@ function update() {
 
 }
 
+function createBomb(star) {
+  // Створення бомби під час збору зірки
+  var bomb = this.physics.add.image(star.x, star.y - 900, 'bomb').setGravityY(300); // Змінені координати для з'явлення бомби зверху
+  this.physics.add.collider(bomb, platforms, function (bomb, platform) {
+    bomb.setVelocityY(-600); // Задайте вектор швидкості у протилежному напрямку від вертикальної швидкості платформи
+  });
+  // Задання горизонтальної швидкості бомби
+  var direction = Phaser.Math.Between(0, 1) ? 1 : -1; // Випадково вибираємо напрямок (-1 або 1)
+  var horizontalSpeed = Phaser.Math.Between(100, 200) * direction; // Горизонтальна швидкість
+  bomb.setVelocityX(horizontalSpeed);
 
-function showLive() {
+  // Зміна напрямку бомб, якщо вона зіштовхується з верхніми платформами
+  this.physics.add.collider(bomb, platforms, function (bomb, platform) {
+    bomb.setVelocityX(-bomb.body.velocity.x); // Змінюємо напрямок бомби, віднімаючи її поточну горизонтальну швидкість
+  });
+  bomb.setCollideWorldBounds(true);
+  bomb.setBounce(1);
+  this.physics.add.collider(player, bomb, function () { hitBomb(player, bomb); }); // Додайте колізію гравця з бомбою та обробник
+}
+// Функція обробки зіткнення гравця з бомбою
+function hitBomb(player, bomb) {
+  life -= 1;
+  liveText.setText(showLife());
+  console.log('boom');
+  player.anims.play('turn');
+  if (life === 0) {
 
-  var lifeLine = 'Життя : '
-
-  for (var i = 0; i < life; i++) {
-    lifeLine += '❤'
-
-
+    this.physics.pause();
+    player.setTint(0xff0000);
+    player.anims.play('turn');
   }
-  return lifeLine
+}
+function refreshBody() {
+  console.log('game over')
+  this.scene.restart();
+};
+// Функція для відображення кількості життів
+function showLife() {
+  var lifeLine = 'Life:';
+  for (var i = 0; i < life; i++) {
+    lifeLine += '💕';
+  }
+  return lifeLine;
 
+}
+
+function gameOver() {
+  console.log('Гра закінчилася!');
 
 }
 
 
+
+
+
+
+
+
+// Функція перезапуску гри
+function restartGame() {
+  // Перезапуск гри лише у випадку, якщо гра завершилася
+  if (gameOver) {
+    // Перезапуск гри
+    this.scene.restart();
+
+    // Скидання рахунку та статусу завершення гри
+    score = 0;
+    gameOver = false;
+
+    // Оновлення відображення рахунку
+    scoreText.setText('Score: ' + score);
+
+    // Приховання вікна з повідомленням про кінець гри
+    document.getElementById('gameOverWindow').style.display = 'none';
+
+
+  }
+}
