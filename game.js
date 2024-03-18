@@ -55,7 +55,8 @@ function preload() {
   this.load.image('platformOne', 'assets/platformOne.png'); //Завантаження другої платформи
   this.load.image('platformFinish', 'assets/platformFinish.png'); //Завантаження третьої платформи
   this.load.image('bomb', 'assets/bomb.png'); // Завантаження зображення бомби
-
+  this.load.spritesheet('dude2', 'assets/dude.png', { frameWidth: 32, frameHeight: 32 });
+  this.load.spritesheet('dudeleft', 'assets/dudeleft.png', { frameWidth: 32, frameHeight: 32 });
 }
 
 //розмір ігрового світу
@@ -88,6 +89,25 @@ function create() {
   // Додавання зображення будинку на платформу
   this.add.image(400, 740, 'house').setDepth(0);
 
+  //ДОДАНО ВОРОГА
+  player2 = this.physics.add.sprite(810, 400, 'dudeleft').setDepth(5).setScale(2);
+  player2.setVelocityY(230);
+  player2.setVelocityX(180);
+  var direction = -1; // Починаємо з руху вліво
+  player2.setVelocityX(180 * direction); // Встановлення початкової швидкості
+  var direction = Phaser.Math.Between(0, 1) ? 1 : -1; // 1 - рух вправо, -1 - рух вліво
+  player2.setVelocityX(180 * direction); // Встановлення швидкості залежно від напрямку
+
+  player2.setCollideWorldBounds(true);
+  player2.setBounce(1);
+
+  // Зміна напрямку руху через певний інтервал часу
+  setInterval(function () {
+    // Зміна напрямку руху
+    direction *= -1; // Змінюємо напрямок (з вліво на вправо або навпаки)
+    player2.setVelocityX(180 * direction); // Встановлюємо нову швидкість залежно від напрямку
+  }, Phaser.Math.Between(1000, 35000));
+
   // Створення гравця
   player = this.physics.add.sprite(610, 880, 'dude').setDepth(5).setScale(2);
   player.setBounce(0.2);
@@ -96,6 +116,9 @@ function create() {
 
   // Колізія гравця з платформами
   this.physics.add.collider(player, platforms);
+  cursors = this.input.keyboard.createCursorKeys();
+
+  this.physics.add.collider(player2, platforms);
   cursors = this.input.keyboard.createCursorKeys();
 
   // Налаштування анімацій гравця
@@ -115,6 +138,29 @@ function create() {
   this.anims.create({
     key: 'right',
     frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
+    frameRate: 10,
+    repeat: -1
+  });
+
+
+
+  //Створюємо та налаштовуємо анімації
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('dudeleft', { start: 0, end: 3 }),
+    frameRate: 10,
+    repeat: -1
+  });
+
+  this.anims.create({
+    key: 'turn',
+    frames: [{ key: 'dude2', frame: 4 }],
+    frameRate: 20
+  });
+
+  this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNumbers('dude2', { start: 5, end: 8 }),
     frameRate: 10,
     repeat: -1
   });
