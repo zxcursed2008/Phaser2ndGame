@@ -26,7 +26,7 @@ var canMove = true;
 var worldWidth = 20000;
 var powers; //зміна життів
 var life = 5; //початкова кількіть життів
-var walkSpeed = 800;
+var walkSpeed = 400;
 var jumpVelocity = -800;
 var fasterFallVelocity = 800; // Змінна для керування швидкістю приземлення
 var collectedGems = 0; // Змінна для відстеження кількості зібраних целгинок
@@ -582,7 +582,7 @@ function createBomb(star) {
 
 // Функція обробки зіткнення гравця з бомбою
 function hitBomb(player, bomb) {
-  life -= 0.5;
+  life -= 1;
   liveText.setText(showLife());
   console.log('boom');
   player.anims.play('turn');
