@@ -30,7 +30,7 @@ var walkSpeed = 400;
 var jumpVelocity = -800;
 var fasterFallVelocity = 800; // Змінна для керування швидкістю приземлення
 var collectedGems = 0; // Змінна для відстеження кількості зібраних целгинок
-
+var restartButton;
 
 
 
@@ -42,6 +42,7 @@ var game = new Phaser.Game(config);
 // Завантаження ресурсів
 function preload() {
   this.load.image('ground', 'assets/platform.png'); // Завантаження зображення платформи
+  this.load.image('restartButton', 'assets/reset.png'); // Завантаження зображення платформи
   this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 }); // Завантаження спрайту гравця
   this.load.image('house', 'assets/house.png'); // Завантаження зображення будинка зломаного
   this.load.image('house2', 'assets/house2.png'); // Завантаження зображення будинка цілого
@@ -95,8 +96,11 @@ function create() {
   this.add.image(9500, 740, 'house2').setDepth(0);
   this.add.image(10500, 500, 'wall').setDepth(20);
 
+var restartButton = this.add.sprite(1500, 180, 'restartButton').setInteractive().setScrollFactor(0);
 
-
+  restartButton.on('pointerup', function () {
+    restartGame();
+});
 
   //ДОДАНО ВОРОГА 1
   pig2 = this.physics.add.group();
@@ -142,7 +146,7 @@ function create() {
     direction *= -1; // Змінюємо напрямок (з вліво на вправо або навпаки)
     player3.setVelocityX(180 * direction); // Встановлюємо нову швидкість залежно від напрямку
   }, Phaser.Math.Between(1000, 35000));
- 
+
 
 
   //ДОДАНО ВОРОГА 3
@@ -484,6 +488,9 @@ function create() {
   //додано текст
   this.add.text(540, 50, 'ЗБЕРИ УСІ ЦЕГЛИНКИ ЩОБ ЗБУДУВАТИ БУДИНОК!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
   this.add.text(9200, 50, 'ВІТАЮ ВИ ЗБУДУВАЛИ БУДИНОК!', { fontFamily: 'Arial', fontSize: 32, color: '#101691' });
+
+
+
 }
 
 //функція збору зірок
@@ -582,28 +589,34 @@ function createBomb(star) {
 function hitBomb(player, bomb) {
   life -= 1;
   liveText.setText(showLife());
-  console.log('boom');
   player.anims.play('turn');
   if (life === 0) {
+    canMove = false;
+    player.setVelocityX(0);
+    player.setVelocityY(0);
+    player.anims.stop();
+    gameOverText = this.add.text(window.innerWidth / 2, window.innerHeight / 2, 'Game over', { fontSize: '64px', fill: '#f00' }).setOrigin(0.5).setScrollFactor(0);
+    restartButton = this.add.text(window.innerWidth / 2, window.innerHeight / 2 + 100, 'Restart Game', { fontSize: '32px', fill: '#fff', backgroundColor: '#00f' }).setOrigin(0.5).setScrollFactor(0);
+    restartButton.setInteractive();
+    restartButton.on('pointerdown', refreshBody); // Виправлено виклик функції refreshBody
 
-    this.physics.pause();
-    player.setTint(0xff0000);
-    player.anims.play('turn');
   }
 }
 
 
-function hitEnemy(player, player2) {
+// function hitEnemy(player, player2) {
 
-  life -= 3;
-  liveText.setText(showLife());
-  console.log('boom');
-}
+//   life -= 3;
+//   liveText.setText(showLife());
+//   console.log('boom');
+// }
 
 
 function refreshBody() {
-  console.log('game over')
-  this.scene.restart();
+
+
+  location.reload();
+
 };
 
 
@@ -619,37 +632,12 @@ function showLife() {
 }
 
 
-
-function gameOver() {
-  console.log('Гра закінчилася!');
-
-}
-
-
-
-// Функція перезапуску гри
 function restartGame() {
-  // Перезапуск гри лише у випадку, якщо гра завершилася
-  if (gameOver) {
-
-
-    // Перезапуск гри
-    this.scene.restart();
-
-    // Скидання рахунку та статусу завершення гри
-    score = 0;
-    gameOver = false;
-
-    // Оновлення відображення рахунку
-    scoreText.setText('Кількість зібраних цеглинок: ' + score);
-
-    // Приховання вікна з повідомленням про кінець гри
-    document.getElementById('gameOverWindow').style.display = 'none';
-
-
-  }
-
-
+// Reload the current scene
+console.log('---')
+location.reload()
+game.scene.stop();
+game.scene.start(game.scene.key);
 }
 
- 
+
